@@ -19,6 +19,23 @@ public class CompanyController {
         return new ArrayList<Company>(db.values());
     }
 
+    @GetMapping("/companies")
+    public List<Company> getCompaniesByPage(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "5") int size) {
+
+        List<Company> allCompanies = new ArrayList<>(db.values());
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, allCompanies.size());
+
+        if (fromIndex >= allCompanies.size()) {
+            // 页码超出总数，返回空列表
+            return new ArrayList<>();
+        }
+
+        return allCompanies.subList(fromIndex, toIndex);
+    }
+
     @PostMapping("/companies")
     @ResponseStatus(HttpStatus.CREATED)
     public void createCompany(@RequestBody Company company) {
