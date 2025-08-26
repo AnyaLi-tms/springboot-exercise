@@ -13,7 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class EmployeeController {
-    private final static Map<Integer, Employee> db = new HashMap<>();
+    final static Map<Integer, Employee> db = new HashMap<>();
 
     @GetMapping("/employees")
     public List<Employee> getAllEmployees() {

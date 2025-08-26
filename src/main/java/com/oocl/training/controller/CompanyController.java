@@ -1,5 +1,6 @@
 package com.oocl.training.controller;
 import com.oocl.training.model.Company;
+import com.oocl.training.model.Employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +42,12 @@ public class CompanyController {
     @GetMapping("/companies/{id}")
     public Company getCompany(@PathVariable int id) {
         return db.get(id);
+    }
+
+    @GetMapping("/companies/{id}/employees")
+    public List<Employee> getEmployeesByCompanyId(@PathVariable int id) {
+        return EmployeeController.db.values().stream()
+                .filter(employee -> employee.getCompanyId() == id)
+                .toList();
     }
 }
