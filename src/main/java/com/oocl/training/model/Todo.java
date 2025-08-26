@@ -1,4 +1,4 @@
-package com.oocl.training.controller;
+package com.oocl.training.model;
 
 public class Todo {
     private int id;
