@@ -1,0 +1,44 @@
+package com.oocl.training.repository;
+
+import com.oocl.training.model.Employee;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+public class EmployeeRepository {
+    private static final Map<Integer, Employee> employeeDb = new HashMap<>(Map.of(
+            1, new Employee(1, "John Smith", 32, "male", 5000.0),
+            2, new Employee(2, "Jane Johnson", 28, "female", 6000.0),
+            3, new Employee(3, "David Williams", 35, "male", 5500.0),
+            4, new Employee(4, "Emily Brown", 23, "female", 4500.0),
+            5, new Employee(5, "Michael Jones", 40, "male", 7000.0)));
+
+    public Employee save(Employee newEmployee) {
+        newEmployee.setId(employeeDb.size() + 1);
+        return employeeDb.put(newEmployee.getId(), newEmployee);
+    }
+
+    public List<Employee> get() {
+        return new ArrayList<>(employeeDb.values());
+    }
+
+    public Employee get(int id) {
+        return employeeDb.get(id);
+    }
+
+    public void delete(int id) {
+        employeeDb.remove(id);
+    }
+
+    public void update(int id, Employee newEmployee) {
+        if(employeeDb.containsKey(id)) {
+            newEmployee.setId(id);
+            employeeDb.put(newEmployee.getId(), newEmployee);
+        }
+        employeeDb.put(id, newEmployee);
+    }
+}

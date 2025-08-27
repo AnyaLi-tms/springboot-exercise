@@ -1,6 +1,7 @@
 package com.oocl.training.controller;
 import com.oocl.training.model.Company;
 import com.oocl.training.model.Employee;
+import com.oocl.training.repository.EmployeeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,24 +13,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
-    // 先定义员工列表
-    static final List<Employee> employeesForCompany1 = List.of(
-            EmployeeController.employeeDb.get(1),
-            EmployeeController.employeeDb.get(2)
-    );
+//    // 先定义员工列表
+//    static final List<Employee> employeesForCompany1 = List.of(
+//            EmployeeRepository.employeeDb.get(1),
+//            EmployeeController.employeeDb.get(2)
+//    );
+//
+//    static final List<Employee> employeesForCompany2 = List.of(
+//            EmployeeController.employeeDb.get(3),
+//            EmployeeController.employeeDb.get(4),
+//            EmployeeController.employeeDb.get(5)
+//    );
 
-    static final List<Employee> employeesForCompany2 = List.of(
-            EmployeeController.employeeDb.get(3),
-            EmployeeController.employeeDb.get(4),
-            EmployeeController.employeeDb.get(5)
-    );
-
-    // 初始化 companyDb
-    static final Map<Integer, Company> companyDb = new HashMap<>(Map.of(
-            1, new Company(1, "Tech Corp", employeesForCompany1),
-            2, new Company(2, "Business Inc", employeesForCompany2)
-    ));
-
+//    // 初始化 companyDb
+//    static final Map<Integer, Company> companyDb = new HashMap<>(Map.of(
+//            1, new Company(1, "Tech Corp", employeesForCompany1),
+//            2, new Company(2, "Business Inc", employeesForCompany2)
+//    ));
+    private final Map<Integer, Company> companyDb = new HashMap<>();
     @GetMapping()
     public List<Company> getAllCompanies(
             @RequestParam(required = false, defaultValue = "1") Integer page,
@@ -68,10 +69,10 @@ public class CompanyController {
         return companyDb.get(id);
     }
 
-    @GetMapping("/{id}/employees")
-    public List<Employee> getEmployeesByCompanyId(@PathVariable int id) {
-        return EmployeeController.employeeDb.values().stream()
-                .filter(employee -> employee.getCompanyId() == id)
-                .toList();
-    }
+//    @GetMapping("/{id}/employees")
+//    public List<Employee> getEmployeesByCompanyId(@PathVariable int id) {
+//        return EmployeeController.employeeDb.values().stream()
+//                .filter(employee -> employee.getCompanyId() == id)
+//                .toList();
+//    }
 }
