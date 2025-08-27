@@ -18,17 +18,13 @@ public class CompanyService {
     }
 
     public Company createCompany(Company company) {
-        if (company.getId() == null) {
-            int newId = companyRepository.getMaxId() + 1;
-            company.setId(newId);
-        }
         return companyRepository.save(company);
     }
 
     public List<Company> getAllCompanies(Integer page, Integer size) {
         List<Company> allCompanies = new ArrayList<>(companyRepository.get());
 
-        if (page == null || size == null) {
+        if (page == null || size == null || page < 1 || size < 1) {
             return allCompanies;
         }
 
@@ -50,9 +46,7 @@ public class CompanyService {
         if (existingCompany == null) {
             throw new InvalidCompanyException("Company with id " + id + " does not exist");
         }
-        company.setId(id);
-        createCompany(company);
-        // companyRepository.save(company);
+        companyRepository.update(id, company);
     }
 
     public Company getCompany(Integer id) {

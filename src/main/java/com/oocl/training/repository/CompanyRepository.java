@@ -28,7 +28,7 @@ public class CompanyRepository {
     ));
 
     public Company save(Company newCompany) {
-        return companyDb.put(newCompany.getId(), newCompany);
+        return companyDb.put(getMaxId() + 1, newCompany);
     }
 
     public List<Company> get() {
