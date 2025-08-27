@@ -25,10 +25,6 @@ public class EmployeeService {
         if (employee.getAge() > 30 && employee.getSalary() < 20000) {
             throw new InvalidEmployeeException("Employees over 30 ages must have a salary more than 20000");
         }
-        if (employee.getId() == null) {
-            int newId = employeeRepository.getMaxId() + 1;
-            employee.setId(newId);
-        }
         return employeeRepository.save(employee);
     }
 
@@ -55,7 +51,12 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Integer id) {
-        employeeRepository.get(id).setActive(false);
+        Employee employee = employeeRepository.get(id);
+        if (employee == null) {
+            throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
+        }
+        employee.setActive(false);
+        employeeRepository.update(id, employee);
     }
 
     public void updateEmployee(Integer id, Employee employee) {
@@ -66,12 +67,13 @@ public class EmployeeService {
         if (!existingEmployee.getActive()) {
             throw new InvalidEmployeeException("Employee is not active");
         }
-        employee.setId(id);
-        createEmployee(employee);
-        // employeeRepository.save(employee);
+        employeeRepository.update(id, employee);
     }
 
     public Employee getEmployee(Integer id) {
+        if(employeeRepository.get(id) == null) {
+            throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
+        }
         return employeeRepository.get(id);
     }
 }

@@ -19,7 +19,7 @@ public class EmployeeRepository {
             5, new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0)));
 
     public Employee save(Employee newEmployee) {
-        return employeeDb.put(newEmployee.getId(), newEmployee);
+        return employeeDb.put(getMaxId() + 1, newEmployee);
     }
 
     public List<Employee> get() {
