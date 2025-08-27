@@ -10,6 +10,8 @@ public class Employee {
     private int companyId;
     private boolean active = true;
 
+    public Employee() {}
+
     public Employee(Integer id, String name, int age, Gender gender, double salary) {
         this.id = id;
         this.name = name;
