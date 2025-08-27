@@ -1,6 +1,7 @@
 package com.oocl.training.service;
 
 import com.oocl.training.exception.InvalidEmployeeException;
+import com.oocl.training.model.Gender;
 import com.oocl.training.repository.EmployeeRepository;
 import com.oocl.training.model.Employee;
 import org.springframework.stereotype.Service;
@@ -24,19 +25,19 @@ public class EmployeeService {
         if (employee.getAge() > 30 && employee.getSalary() < 20000) {
             throw new InvalidEmployeeException("Employees over 30 ages must have a salary more than 20000");
         }
-        if(employee.getId() == null) {
+        if (employee.getId() == null) {
             int newId = employeeRepository.getMaxId() + 1;
             employee.setId(newId);
         }
         return employeeRepository.save(employee);
     }
 
-    public List<Employee> getAllEmployees(Integer page, Integer size, String gender) {
+    public List<Employee> getAllEmployees(Integer page, Integer size, Gender gender) {
         List<Employee> allEmployees = new ArrayList<>(employeeRepository.get());
 
-        if (gender != null && !gender.isEmpty()) {
+        if (gender != null) {
             allEmployees = allEmployees.stream()
-                    .filter(e -> gender.equalsIgnoreCase(e.getGender()))
+                    .filter(e -> e.getGender() == gender)
                     .collect(Collectors.toList());
         }
 
@@ -59,7 +60,7 @@ public class EmployeeService {
 
     public void updateEmployee(int id, Employee employee) {
         Employee existingEmployee = employeeRepository.get(id);
-        if(existingEmployee == null) {
+        if (existingEmployee == null) {
             throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
         }
         if (!existingEmployee.getActive()) {

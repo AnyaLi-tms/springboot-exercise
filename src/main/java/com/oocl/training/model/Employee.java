@@ -5,12 +5,12 @@ public class Employee {
     private Integer id;
     private String name;
     private int age;
-    private String gender;
+    private Gender gender;
     private double salary;
     private int companyId;
     private boolean active = true;
 
-    public Employee(Integer id, String name, int age, String gender, double salary) {
+    public Employee(Integer id, String name, int age, Gender gender, double salary) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -44,11 +44,11 @@ public class Employee {
         this.age = age;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

@@ -2,6 +2,7 @@ package com.oocl.training.controller;
 
 
 import com.oocl.training.model.Employee;
+import com.oocl.training.model.Gender;
 import com.oocl.training.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class EmployeeController {
     public List<Employee> getAllEmployees(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "5") Integer size,
-            @RequestParam(required = false) String gender) {
+            @RequestParam(required = false) Gender gender) {
         return employeeService.getAllEmployees(page, size, gender);
     }
 
