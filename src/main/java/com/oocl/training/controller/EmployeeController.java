@@ -34,17 +34,17 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEmployee(@PathVariable int id) {
+    public void deleteEmployee(@PathVariable Integer id) {
         employeeService.deleteEmployee(id);
     }
 
     @PutMapping("/{id}")
-    public void updateEmployee(@PathVariable int id, @RequestBody Employee employee) {
+    public void updateEmployee(@PathVariable Integer id, @RequestBody Employee employee) {
         employeeService.updateEmployee(id, employee);
     }
 
     @GetMapping("/{id}")
-    public Employee getEmployee(@PathVariable int id) {
+    public Employee getEmployee(@PathVariable Integer id) {
         return employeeService.getEmployee(id);
     }
 }

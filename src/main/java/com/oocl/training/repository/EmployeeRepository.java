@@ -26,19 +26,19 @@ public class EmployeeRepository {
         return new ArrayList<>(employeeDb.values());
     }
 
-    public Employee get(int id) {
+    public Employee get(Integer id) {
         return employeeDb.get(id);
     }
 
-    public void delete(int id) {
+    public void delete(Integer id) {
         employeeDb.remove(id);
     }
 
-    public void update(int id, Employee newEmployee) {
+    public void update(Integer id, Employee newEmployee) {
         employeeDb.put(id, newEmployee);
     }
 
-    public int getMaxId() {
+    public Integer getMaxId() {
         return employeeDb.keySet().stream().max(Integer::compareTo).orElse(0);
     }
 }

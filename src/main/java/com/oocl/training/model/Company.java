@@ -3,28 +3,28 @@ package com.oocl.training.model;
 import java.util.List;
 
 public class Company {
-    private int id;
+    private Integer id;
     private String name;
     private List<Employee> employees;
 
     public Company() {}
 
-    public Company(int id, String name) {
+    public Company(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Company(int id, String name, List<Employee> employees) {
+    public Company(Integer id, String name, List<Employee> employees) {
         this.id = id;
         this.name = name;
         this.employees = employees;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int setId(int id) {
+    public Integer setId(Integer id) {
         this.id = id;
         return id;
     }

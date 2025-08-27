@@ -52,12 +52,12 @@ public class CompanyController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCompany(@PathVariable int id) {
+    public void deleteCompany(@PathVariable Integer id) {
         companyDb.remove(id);
     }
 
     @PutMapping("/{id}")
-    public void updateCompany(@PathVariable int id, @RequestBody Company company) {
+    public void updateCompany(@PathVariable Integer id, @RequestBody Company company) {
         if(companyDb.containsKey(id)) {
             company.setId(id);
             companyDb.put(id, company);
@@ -65,12 +65,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public Company getCompany(@PathVariable int id) {
+    public Company getCompany(@PathVariable Integer id) {
         return companyDb.get(id);
     }
 
 //    @GetMapping("/{id}/employees")
-//    public List<Employee> getEmployeesByCompanyId(@PathVariable int id) {
+//    public List<Employee> getEmployeesByCompanyId(@PathVariable Integer id) {
 //        return EmployeeController.employeeDb.values().stream()
 //                .filter(employee -> employee.getCompanyId() == id)
 //                .toList();

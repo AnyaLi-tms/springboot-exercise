@@ -54,11 +54,11 @@ public class EmployeeService {
         return allEmployees.subList(fromIndex, toIndex);
     }
 
-    public void deleteEmployee(int id) {
+    public void deleteEmployee(Integer id) {
         employeeRepository.get(id).setActive(false);
     }
 
-    public void updateEmployee(int id, Employee employee) {
+    public void updateEmployee(Integer id, Employee employee) {
         Employee existingEmployee = employeeRepository.get(id);
         if (existingEmployee == null) {
             throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
@@ -71,7 +71,7 @@ public class EmployeeService {
         // employeeRepository.save(employee);
     }
 
-    public Employee getEmployee(int id) {
+    public Employee getEmployee(Integer id) {
         return employeeRepository.get(id);
     }
 }
