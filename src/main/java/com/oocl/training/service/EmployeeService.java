@@ -37,7 +37,7 @@ public class EmployeeService {
                     .collect(Collectors.toList());
         }
 
-        if (page == null || size == null) {
+        if (page == null || size == null || page < 1 || size < 1) {
             return allEmployees;
         }
 

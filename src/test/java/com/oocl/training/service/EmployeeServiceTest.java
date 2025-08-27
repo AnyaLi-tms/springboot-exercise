@@ -132,6 +132,88 @@ class EmployeeServiceTest {
     }
 
     @Test
+    void should_get_employees_by_page_and_size() {
+        // Given
+        List<Employee> allEmployees = List.of(
+                new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
+                new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0),
+                new Employee(3, "David Williams", 35, Gender.MALE, 5500.0),
+                new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0),
+                new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0)
+        );
+        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+
+        List<Employee> page1 = employeeService.getAllEmployees(1, 2, null);
+        List<Employee> page2 = employeeService.getAllEmployees(2, 2, null);
+        List<Employee> page3 = employeeService.getAllEmployees(3, 2, null);
+
+        // Then
+        assertEquals(2, page1.size());
+        assertEquals(1, page3.size());
+        assertEquals("John Smith", page1.getFirst().getName());
+        assertEquals("David Williams", page2.getFirst().getName());
+        assertEquals("Michael Jones", page3.getFirst().getName());
+    }
+
+    @Test
+    void should_return_empty_list_when_page_out_of_range() {
+        // Given
+        List<Employee> allEmployees = List.of(
+                new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
+                new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0)
+        );
+        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+
+        // When
+        List<Employee> result = employeeService.getAllEmployees(10, 5, null);
+
+        // Then
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void should_get_employees_by_gender_and_page_and_size() {
+        // Given
+        List<Employee> allEmployees = List.of(
+                new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
+                new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0),
+                new Employee(3, "David Williams", 35, Gender.MALE, 5500.0),
+                new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0),
+                new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0),
+                new Employee(6, "Alice Green", 29, Gender.FEMALE, 4800.0)
+        );
+        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+
+        // When: gender=FEMALE, page=1, size=2
+        List<Employee> page1 = employeeService.getAllEmployees(1, 2, Gender.FEMALE);
+        // When: gender=FEMALE, page=2, size=2
+        List<Employee> page2 = employeeService.getAllEmployees(2, 2, Gender.FEMALE);
+
+        // Then
+        assertEquals(2, page1.size());
+        assertEquals(1, page2.size());
+        assertEquals("Jane Johnson", page1.getFirst().getName());
+        assertEquals("Alice Green", page2.getFirst().getName());
+    }
+
+    @Test
+    void should_handle_invalid_page_or_size() {
+        List<Employee> allEmployees = List.of(
+                new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
+                new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0)
+        );
+        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+
+        List<Employee> result1 = employeeService.getAllEmployees(0, 5, null);
+        List<Employee> result2 = employeeService.getAllEmployees(1, 0, null);
+        List<Employee> result3 = employeeService.getAllEmployees(-1, -5, null);
+
+        assertEquals(allEmployees.size(), result1.size());
+        assertEquals(allEmployees.size(), result2.size());
+        assertEquals(allEmployees.size(), result3.size());
+    }
+
+    @Test
     void should_delete_employee_successfully() {
         // Given
         Integer reqId = 1;
