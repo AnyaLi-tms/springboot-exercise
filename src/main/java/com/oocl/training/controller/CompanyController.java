@@ -1,78 +1,53 @@
 package com.oocl.training.controller;
+
 import com.oocl.training.model.Company;
 import com.oocl.training.model.Employee;
-import com.oocl.training.repository.EmployeeRepository;
+import com.oocl.training.service.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
-//    // 先定义员工列表
-//    static final List<Employee> employeesForCompany1 = List.of(
-//            EmployeeRepository.employeeDb.get(1),
-//            EmployeeController.employeeDb.get(2)
-//    );
-//
-//    static final List<Employee> employeesForCompany2 = List.of(
-//            EmployeeController.employeeDb.get(3),
-//            EmployeeController.employeeDb.get(4),
-//            EmployeeController.employeeDb.get(5)
-//    );
+    private final CompanyService companyService;
 
-//    // 初始化 companyDb
-//    static final Map<Integer, Company> companyDb = new HashMap<>(Map.of(
-//            1, new Company(1, "Tech Corp", employeesForCompany1),
-//            2, new Company(2, "Business Inc", employeesForCompany2)
-//    ));
-    private final Map<Integer, Company> companyDb = new HashMap<>();
+    public CompanyController(CompanyService companyService) {
+        this.companyService = companyService;
+    }
+
     @GetMapping()
     public List<Company> getAllCompanies(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "5") Integer size) {
-        List<Company> allCompanies = new ArrayList<>(companyDb.values());
-        if (page == null || size == null) return allCompanies;
-        int fromIndex = (page - 1) * size;
-        int toIndex = Math.min(fromIndex + size, allCompanies.size());
-        if (fromIndex >= allCompanies.size()) return new ArrayList<>();
-        return allCompanies.subList(fromIndex, toIndex);
+        return companyService.getAllCompanies(page, size);
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCompany(@RequestBody Company company) {
-        int id = company.setId(companyDb.size() + 1);
-        companyDb.put(id, company);
+    public Company createCompany(@RequestBody Company company) {
+        return companyService.createCompany(company);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompany(@PathVariable Integer id) {
-        companyDb.remove(id);
+        companyService.deleteCompany(id);
     }
 
     @PutMapping("/{id}")
     public void updateCompany(@PathVariable Integer id, @RequestBody Company company) {
-        if(companyDb.containsKey(id)) {
-            company.setId(id);
-            companyDb.put(id, company);
-        }
+        companyService.updateCompany(id, company);
     }
 
     @GetMapping("/{id}")
     public Company getCompany(@PathVariable Integer id) {
-        return companyDb.get(id);
+        return companyService.getCompany(id);
     }
 
-//    @GetMapping("/{id}/employees")
-//    public List<Employee> getEmployeesByCompanyId(@PathVariable Integer id) {
-//        return EmployeeController.employeeDb.values().stream()
-//                .filter(employee -> employee.getCompanyId() == id)
-//                .toList();
-//    }
+    @GetMapping("/{id}/employees")
+    public List<Employee> getEmployeesByCompanyId(@PathVariable Integer id) {
+        return companyService.getEmployeesByCompanyId(id);
+    }
 }
