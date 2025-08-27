@@ -1,14 +1,13 @@
 package com.oocl.training.service;
 
+import com.oocl.training.exception.InvalidEmployeeException;
 import com.oocl.training.repository.EmployeeRepository;
 import com.oocl.training.model.Employee;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -19,24 +18,56 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(Employee employee) {
+        if (employee.getAge() < 18 || employee.getAge() > 65) {
+            throw new InvalidEmployeeException("Employee age must be between 18 and 65");
+        }
+        if (employee.getAge() > 30 && employee.getSalary() < 20000) {
+            throw new InvalidEmployeeException("Employees over 30 ages must have a salary more than 20000");
+        }
+        if(employee.getId() == null) {
+            int newId = employeeRepository.getMaxId() + 1;
+            employee.setId(newId);
+        }
         return employeeRepository.save(employee);
     }
 
-    public List<Employee> getAllEmployees(Integer page, Integer size) {
+    public List<Employee> getAllEmployees(Integer page, Integer size, String gender) {
         List<Employee> allEmployees = new ArrayList<>(employeeRepository.get());
-        if (page == null || size == null) return allEmployees;
+
+        if (gender != null && !gender.isEmpty()) {
+            allEmployees = allEmployees.stream()
+                    .filter(e -> gender.equalsIgnoreCase(e.getGender()))
+                    .collect(Collectors.toList());
+        }
+
+        if (page == null || size == null) {
+            return allEmployees;
+        }
+
         int fromIndex = (page - 1) * size;
         int toIndex = Math.min(fromIndex + size, allEmployees.size());
-        if (fromIndex >= allEmployees.size()) return new ArrayList<>();
+
+        if (fromIndex >= allEmployees.size()) {
+            return new ArrayList<>();
+        }
         return allEmployees.subList(fromIndex, toIndex);
     }
 
     public void deleteEmployee(int id) {
-        employeeRepository.delete(id);
+        employeeRepository.get(id).setActive(false);
     }
 
     public void updateEmployee(int id, Employee employee) {
-        employeeRepository.update(id, employee);
+        Employee existingEmployee = employeeRepository.get(id);
+        if(existingEmployee == null) {
+            throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
+        }
+        if (!existingEmployee.getActive()) {
+            throw new InvalidEmployeeException("Employee is not active");
+        }
+        employee.setId(id);
+        createEmployee(employee);
+        // employeeRepository.save(employee);
     }
 
     public Employee getEmployee(int id) {

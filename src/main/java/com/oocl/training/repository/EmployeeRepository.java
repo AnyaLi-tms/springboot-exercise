@@ -18,7 +18,6 @@ public class EmployeeRepository {
             5, new Employee(5, "Michael Jones", 40, "male", 7000.0)));
 
     public Employee save(Employee newEmployee) {
-        newEmployee.setId(employeeDb.size() + 1);
         return employeeDb.put(newEmployee.getId(), newEmployee);
     }
 
@@ -35,10 +34,10 @@ public class EmployeeRepository {
     }
 
     public void update(int id, Employee newEmployee) {
-        if(employeeDb.containsKey(id)) {
-            newEmployee.setId(id);
-            employeeDb.put(newEmployee.getId(), newEmployee);
-        }
         employeeDb.put(id, newEmployee);
+    }
+
+    public int getMaxId() {
+        return employeeDb.keySet().stream().max(Integer::compareTo).orElse(0);
     }
 }

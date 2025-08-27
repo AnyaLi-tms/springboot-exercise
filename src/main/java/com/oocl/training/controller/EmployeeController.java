@@ -1,16 +1,12 @@
 package com.oocl.training.controller;
 
 
-import com.oocl.training.model.Company;
 import com.oocl.training.model.Employee;
 import com.oocl.training.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/employees")
@@ -30,8 +26,9 @@ public class EmployeeController {
     @GetMapping()
     public List<Employee> getAllEmployees(
             @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "5") Integer size) {
-        return employeeService.getAllEmployees(page, size);
+            @RequestParam(required = false, defaultValue = "5") Integer size,
+            @RequestParam(required = false) String gender) {
+        return employeeService.getAllEmployees(page, size, gender);
     }
 
     @DeleteMapping("/{id}")

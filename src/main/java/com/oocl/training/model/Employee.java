@@ -2,16 +2,15 @@ package com.oocl.training.model;
 
 
 public class Employee {
-    private int id;
+    private Integer id;
     private String name;
     private int age;
     private String gender;
     private double salary;
     private int companyId;
+    private boolean active = true;
 
-    public Employee() {}
-
-    public Employee(int id, String name, int age, String gender, double salary) {
+    public Employee(Integer id, String name, int age, String gender, double salary) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -20,11 +19,11 @@ public class Employee {
     }
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int setId(int id) {
+    public Integer setId(Integer id) {
         this.id = id;
         return id;
     }
@@ -67,5 +66,13 @@ public class Employee {
 
     public void setCompanyId(int companyId) {
         this.companyId = companyId;
+    }
+
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
