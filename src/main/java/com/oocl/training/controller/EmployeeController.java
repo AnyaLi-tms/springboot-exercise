@@ -11,28 +11,28 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/employees")
 public class EmployeeController {
     final static Map<Integer, Employee> db = new HashMap<>();
 
-    @GetMapping("/employees")
+    @GetMapping("")
     public List<Employee> getAllEmployees() {
         return new ArrayList<>(db.values());
     }
 
-    @PostMapping("/employee")
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public void createEmployee(@RequestBody Employee employee) {
         int id  = employee.setId(db.size()+1);
         db.put(id, employee);
     }
 
-    @DeleteMapping("/employee/{id}")
+    @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable int id) {
         db.remove(id);
     }
 
-    @PutMapping("/employee/{id}")
+    @PutMapping("/{id}")
     public void updateEmployee(@PathVariable int id, @RequestBody Employee employee) {
         if(db.containsKey(id)) {
             employee.setId(id);
@@ -40,7 +40,7 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/employee/{id}")
+    @GetMapping("/{id}")
     public Employee getEmployee(@PathVariable int id) {
         return db.get(id);
     }
