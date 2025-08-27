@@ -71,7 +71,7 @@ public class EmployeeService {
     }
 
     public Employee getEmployee(Integer id) {
-        if(employeeRepository.get(id) == null) {
+        if (employeeRepository.get(id) == null) {
             throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
         }
         return employeeRepository.get(id);
