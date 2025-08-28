@@ -3,7 +3,7 @@ package com.oocl.training.service;
 import com.oocl.training.exception.InvalidEmployeeException;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
-import com.oocl.training.repository.EmployeeRepository;
+import com.oocl.training.repository.EmployeeInMemoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EmployeeServiceTest {
 
     @Mock
-    private EmployeeRepository employeeRepository;
+    private EmployeeInMemoryRepository employeeInMemoryRepository;
 
     @InjectMocks
     private EmployeeService employeeService;
@@ -30,7 +30,7 @@ class EmployeeServiceTest {
         // Given
         Employee reqEmployee = new Employee("Bill Gill", 28, Gender.MALE, 20000.0);
         Employee mockedEmployee = new Employee(1, reqEmployee.getName(), reqEmployee.getAge(), reqEmployee.getGender(), reqEmployee.getSalary());
-        Mockito.when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(mockedEmployee);
+        Mockito.when(employeeInMemoryRepository.save(Mockito.any(Employee.class))).thenReturn(mockedEmployee);
 
         // When
         Employee respEmployee = employeeService.createEmployee(reqEmployee);
@@ -84,7 +84,7 @@ class EmployeeServiceTest {
                 new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0),
                 new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0)));
         List<Employee> mockedAllEmployees = new ArrayList<>(reqAllEmployees);
-        Mockito.when(employeeRepository.get()).thenReturn(mockedAllEmployees);
+        Mockito.when(employeeInMemoryRepository.get()).thenReturn(mockedAllEmployees);
 
         // When
         List<Employee> respAllEmployees = employeeService.getAllEmployees(null, null, null);
@@ -109,7 +109,7 @@ class EmployeeServiceTest {
         List<Employee> mockedAllEmployees = new ArrayList<>(List.of(
                 new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0),
                 new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0)));
-        Mockito.when(employeeRepository.get()).thenReturn(mockedAllEmployees);
+        Mockito.when(employeeInMemoryRepository.get()).thenReturn(mockedAllEmployees);
 
         // When
         List<Employee> respAllEmployees = employeeService.getAllEmployees(null, null, Gender.FEMALE);
@@ -137,7 +137,7 @@ class EmployeeServiceTest {
                 new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0),
                 new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0)
         );
-        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+        Mockito.when(employeeInMemoryRepository.get()).thenReturn(new ArrayList<>(allEmployees));
 
         List<Employee> page1 = employeeService.getAllEmployees(1, 2, null);
         List<Employee> page2 = employeeService.getAllEmployees(2, 2, null);
@@ -158,7 +158,7 @@ class EmployeeServiceTest {
                 new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
                 new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0)
         );
-        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+        Mockito.when(employeeInMemoryRepository.get()).thenReturn(new ArrayList<>(allEmployees));
 
         // When
         List<Employee> result = employeeService.getAllEmployees(10, 5, null);
@@ -178,7 +178,7 @@ class EmployeeServiceTest {
                 new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0),
                 new Employee(6, "Alice Green", 29, Gender.FEMALE, 4800.0)
         );
-        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+        Mockito.when(employeeInMemoryRepository.get()).thenReturn(new ArrayList<>(allEmployees));
 
         // When: gender=FEMALE, page=1, size=2
         List<Employee> page1 = employeeService.getAllEmployees(1, 2, Gender.FEMALE);
@@ -198,7 +198,7 @@ class EmployeeServiceTest {
                 new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
                 new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0)
         );
-        Mockito.when(employeeRepository.get()).thenReturn(new ArrayList<>(allEmployees));
+        Mockito.when(employeeInMemoryRepository.get()).thenReturn(new ArrayList<>(allEmployees));
 
         List<Employee> result1 = employeeService.getAllEmployees(0, 5, null);
         List<Employee> result2 = employeeService.getAllEmployees(1, 0, null);
@@ -214,27 +214,27 @@ class EmployeeServiceTest {
         // Given
         Integer reqId = 1;
         Employee reqEmployee = new Employee(reqId, "John Smith", 32, Gender.MALE, 5000.0);
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(reqEmployee);
-        Mockito.doNothing().when(employeeRepository).update(reqId, reqEmployee);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(reqEmployee);
+        Mockito.doNothing().when(employeeInMemoryRepository).update(reqId, reqEmployee);
 
         // When
         employeeService.deleteEmployee(reqId);
 
         // Then
         assertFalse(reqEmployee.getActive());
-        Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
-        Mockito.verify(employeeRepository, Mockito.times(1)).update(reqId, reqEmployee);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).update(reqId, reqEmployee);
     }
 
     @Test
     void should_delete_employee_throw_exception_employee_not_exist() {
         // Given
         Integer reqId = 1;
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(null);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(null);
 
         // When & Then
         InvalidEmployeeException exp = assertThrows(InvalidEmployeeException.class, () -> employeeService.deleteEmployee(reqId));
-        Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).get(reqId);
         assertEquals("Employee with id " + reqId + " does not exist", exp.getMessage());
     }
 
@@ -245,15 +245,15 @@ class EmployeeServiceTest {
         Integer reqId = existingEmployee.getId();
         Employee reqEmployee = new Employee("Michael Jones", 40, Gender.MALE, 7000.0);
         Employee mockedEmployee = new Employee(reqId, reqEmployee.getName(), reqEmployee.getAge(), reqEmployee.getGender(), reqEmployee.getSalary());
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(existingEmployee);
-        Mockito.doNothing().when(employeeRepository).update(reqId, reqEmployee);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(existingEmployee);
+        Mockito.doNothing().when(employeeInMemoryRepository).update(reqId, reqEmployee);
 
         // When
         employeeService.updateEmployee(reqId, reqEmployee);
 
         // Then
-        Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
-        Mockito.verify(employeeRepository, Mockito.times(1)).update(reqId, reqEmployee);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).update(reqId, reqEmployee);
     }
 
     @Test
@@ -263,12 +263,12 @@ class EmployeeServiceTest {
         Integer reqId = existingEmployee.getId();
         Employee reqEmployee = new Employee("Michael Jones", 40, Gender.MALE, 7000.0);
         Employee mockedEmployee = new Employee(reqId, reqEmployee.getName(), reqEmployee.getAge(), reqEmployee.getGender(), reqEmployee.getSalary());
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(null);
-        Mockito.doNothing().when(employeeRepository).update(reqId, reqEmployee);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(null);
+        Mockito.doNothing().when(employeeInMemoryRepository).update(reqId, reqEmployee);
 
         // When & Then
         InvalidEmployeeException exp = assertThrows(InvalidEmployeeException.class, () -> employeeService.updateEmployee(reqId, reqEmployee));
-        Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).get(reqId);
         assertEquals("Employee with id " + reqId + " does not exist", exp.getMessage());
     }
 
@@ -279,12 +279,12 @@ class EmployeeServiceTest {
         Integer reqId = existingEmployee.getId();
         existingEmployee.setActive(false);
         Employee reqEmployee = new Employee("Michael Jones", 40, Gender.MALE, 7000.0);
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(existingEmployee);
-        Mockito.doNothing().when(employeeRepository).update(reqId, reqEmployee);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(existingEmployee);
+        Mockito.doNothing().when(employeeInMemoryRepository).update(reqId, reqEmployee);
 
         // When & Then
         InvalidEmployeeException exp = assertThrows(InvalidEmployeeException.class, () -> employeeService.updateEmployee(reqId, reqEmployee));
-        Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).get(reqId);
         assertEquals("Employee is not active", exp.getMessage());
     }
 
@@ -293,13 +293,13 @@ class EmployeeServiceTest {
         // Given
         Integer reqId = 1;
         Employee reqEmployee = new Employee(reqId, "John Smith", 32, Gender.MALE, 5000.0);
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(reqEmployee);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(reqEmployee);
 
         // When
         Employee respEmployee = employeeService.getEmployee(reqId);
 
         // Then
-        Mockito.verify(employeeRepository, Mockito.times(2)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(2)).get(reqId);
         assertEquals(reqEmployee.getId(), respEmployee.getId());
         assertEquals(reqEmployee.getName(), respEmployee.getName());
         assertEquals(reqEmployee.getAge(), respEmployee.getAge());
@@ -312,11 +312,11 @@ class EmployeeServiceTest {
         // Given
         Integer reqId = 1;
         Employee reqEmployee = new Employee(reqId, "John Smith", 32, Gender.MALE, 5000.0);
-        Mockito.when(employeeRepository.get(reqId)).thenReturn(null);
+        Mockito.when(employeeInMemoryRepository.get(reqId)).thenReturn(null);
 
         // When & Then
         InvalidEmployeeException exp = assertThrows(InvalidEmployeeException.class, () -> employeeService.getEmployee(reqId));
-        Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
+        Mockito.verify(employeeInMemoryRepository, Mockito.times(1)).get(reqId);
         assertEquals("Employee with id " + reqId + " does not exist", exp.getMessage());
     }
 }

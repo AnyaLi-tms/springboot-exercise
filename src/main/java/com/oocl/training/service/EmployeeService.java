@@ -2,7 +2,7 @@ package com.oocl.training.service;
 
 import com.oocl.training.exception.InvalidEmployeeException;
 import com.oocl.training.model.Gender;
-import com.oocl.training.repository.EmployeeRepository;
+import com.oocl.training.repository.EmployeeInMemoryRepository;
 import com.oocl.training.model.Employee;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeInMemoryRepository employeeInMemoryRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeService(EmployeeInMemoryRepository employeeInMemoryRepository) {
+        this.employeeInMemoryRepository = employeeInMemoryRepository;
     }
 
     public Employee createEmployee(Employee employee) {
@@ -25,11 +25,11 @@ public class EmployeeService {
         if (employee.getAge() > 30 && employee.getSalary() < 20000) {
             throw new InvalidEmployeeException("Employees over 30 ages must have a salary more than 20000");
         }
-        return employeeRepository.save(employee);
+        return employeeInMemoryRepository.save(employee);
     }
 
     public List<Employee> getAllEmployees(Integer page, Integer size, Gender gender) {
-        List<Employee> allEmployees = new ArrayList<>(employeeRepository.get());
+        List<Employee> allEmployees = new ArrayList<>(employeeInMemoryRepository.get());
 
         if (gender != null) {
             allEmployees = allEmployees.stream()
@@ -51,16 +51,16 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Integer id) {
-        Employee employee = employeeRepository.get(id);
+        Employee employee = employeeInMemoryRepository.get(id);
         if (employee == null) {
             throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
         }
         employee.setActive(false);
-        employeeRepository.update(id, employee);
+        employeeInMemoryRepository.update(id, employee);
     }
 
     public void updateEmployee(Integer id, Employee employee) {
-        Employee existingEmployee = employeeRepository.get(id);
+        Employee existingEmployee = employeeInMemoryRepository.get(id);
         if (existingEmployee == null) {
             throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
         }
@@ -68,13 +68,13 @@ public class EmployeeService {
             throw new InvalidEmployeeException("Employee is not active");
         }
         employee.setId(id);
-        employeeRepository.update(id, employee);
+        employeeInMemoryRepository.update(id, employee);
     }
 
     public Employee getEmployee(Integer id) {
-        if (employeeRepository.get(id) == null) {
+        if (employeeInMemoryRepository.get(id) == null) {
             throw new InvalidEmployeeException("Employee with id " + id + " does not exist");
         }
-        return employeeRepository.get(id);
+        return employeeInMemoryRepository.get(id);
     }
 }

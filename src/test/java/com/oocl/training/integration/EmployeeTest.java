@@ -1,9 +1,8 @@
 package com.oocl.training.integration;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
-import com.oocl.training.repository.EmployeeRepository;
+import com.oocl.training.repository.EmployeeInMemoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,19 +26,19 @@ public class EmployeeTest {
     private MockMvc client;
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    EmployeeInMemoryRepository employeeInMemoryRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() throws Exception {
-        employeeRepository.get().clear();
-        employeeRepository.save(new Employee(1, "John Smith", 32, Gender.MALE, 5000.0));
-        employeeRepository.save(new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0));
-        employeeRepository.save(new Employee(3, "David Williams", 35, Gender.MALE, 5500.0));
-        employeeRepository.save(new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0));
-        employeeRepository.save(new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0));
+        employeeInMemoryRepository.get().clear();
+        employeeInMemoryRepository.save(new Employee(1, "John Smith", 32, Gender.MALE, 5000.0));
+        employeeInMemoryRepository.save(new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0));
+        employeeInMemoryRepository.save(new Employee(3, "David Williams", 35, Gender.MALE, 5500.0));
+        employeeInMemoryRepository.save(new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0));
+        employeeInMemoryRepository.save(new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0));
     }
 
     @Test
@@ -121,7 +118,7 @@ public class EmployeeTest {
     @Test
     public void should_return_all_employees_when_get_all_employees_exist() throws Exception {
         // Given
-        List<Employee> givenEmployees = employeeRepository.get();
+        List<Employee> givenEmployees = employeeInMemoryRepository.get();
 
         // When
         ResultActions perform = client.perform(MockMvcRequestBuilders.get("/employees"));
@@ -214,7 +211,7 @@ public class EmployeeTest {
         // Given
         Employee exsitingEmployee = new Employee(1, "John Smith", 32, Gender.MALE, 5000.0);
         exsitingEmployee.setActive(false);
-        employeeRepository.save(exsitingEmployee);
+        employeeInMemoryRepository.save(exsitingEmployee);
         Integer givenId = exsitingEmployee.getId();
         Employee givenEmployee = new Employee("John Smith", 32, Gender.FEMALE, 5000.0);
         String employeeJson = objectMapper.writeValueAsString(givenEmployee);
