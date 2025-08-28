@@ -53,11 +53,11 @@ public class CompanyService {
         return companyRepository.get(id);
     }
 
-    public List<Employee> getEmployeesByCompanyId(Integer id) {
-        Company company = companyRepository.get(id);
-        if (company == null) {
-            return new ArrayList<>();
-        }
-        return company.getEmployees() != null ? company.getEmployees() : new ArrayList<>();
-    }
+//    public List<Employee> getEmployeesByCompanyId(Integer id) {
+//        Company company = companyRepository.get(id);
+//        if (company == null) {
+//            return new ArrayList<>();
+//        }
+//        return company.getEmployees() != null ? company.getEmployees() : new ArrayList<>();
+//    }
 }
