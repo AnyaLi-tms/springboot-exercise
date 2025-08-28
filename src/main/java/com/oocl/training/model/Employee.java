@@ -19,7 +19,8 @@ public class Employee {
     private Integer companyId;
     private Boolean active = true;
 
-    public Employee() {}
+    public Employee() {
+    }
 
 
     public Employee(String name, Integer age, Gender gender, Double salary) {

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class EmployeeInMemoryRepository {
+public class EmployeeInMemoryRepository implements EmployeeRepository {
     private static final Map<Integer, Employee> employeeDb = new HashMap<>(Map.of(
             1, new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
             2, new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0),
@@ -18,6 +18,7 @@ public class EmployeeInMemoryRepository {
             4, new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0),
             5, new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0)));
 
+    @Override
     public Employee save(Employee newEmployee) {
         int newId = getMaxId() + 1;
         newEmployee.setId(newId);
@@ -25,22 +26,27 @@ public class EmployeeInMemoryRepository {
         return employeeDb.get(newId);
     }
 
+    @Override
     public List<Employee> get() {
         return new ArrayList<>(employeeDb.values());
     }
 
+    @Override
     public Employee get(Integer id) {
         return employeeDb.get(id);
     }
 
+    @Override
     public void delete(Integer id) {
         employeeDb.remove(id);
     }
 
+    @Override
     public void update(Integer id, Employee newEmployee) {
         employeeDb.put(id, newEmployee);
     }
 
+    @Override
     public Integer getMaxId() {
         return employeeDb.keySet().stream().max(Integer::compareTo).orElse(0);
     }

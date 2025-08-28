@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class CompanyInMemoryRepository {
+public class CompanyInMemoryRepository implements CompanyRepository {
     private final HashMap<Integer, Company> companyDb = new HashMap<>(Map.of(
             1, new Company(1, "Acme Corporation", List.of(
                     new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
@@ -27,26 +27,32 @@ public class CompanyInMemoryRepository {
             5, new Company(5, "Nexus Industries")
     ));
 
+    @Override
     public Company save(Company newCompany) {
         return companyDb.put(getMaxId() + 1, newCompany);
     }
 
+    @Override
     public List<Company> get() {
         return new ArrayList<>(companyDb.values());
     }
 
+    @Override
     public Company get(Integer id) {
         return companyDb.get(id);
     }
 
+    @Override
     public void delete(Integer id) {
         companyDb.remove(id);
     }
 
+    @Override
     public void update(Integer id, Company newCompany) {
         companyDb.put(id, newCompany);
     }
 
+    @Override
     public Integer getMaxId() {
         return companyDb.keySet().stream().max(Integer::compareTo).orElse(0);
     }
