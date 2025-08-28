@@ -2,9 +2,11 @@ package com.oocl.training.repository;
 
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class EmployeeDBRepository implements EmployeeRepository {
     JpaEmployeeRepository repository;
 

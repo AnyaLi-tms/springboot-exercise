@@ -1,9 +1,11 @@
 package com.oocl.training.repository;
 
 import com.oocl.training.model.Company;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class CompanyDBRepository implements CompanyRepository {
     @Override
     public Company save(Company company) {
