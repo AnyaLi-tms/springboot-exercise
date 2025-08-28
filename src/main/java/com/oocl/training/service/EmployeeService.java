@@ -79,7 +79,7 @@ public class EmployeeService {
         return employeeRepository.get(id);
     }
 
-    public List<Employee> getEmployeeByGender(Gender gender) {
+    public List<Employee> getEmployeesByGender(Gender gender) {
         return employeeRepository.getByGender(gender);
     }
 }

@@ -50,6 +50,6 @@ public class EmployeeController {
 
     @GetMapping("/{gender}")
     public List<Employee> getEmployee(@PathVariable Gender gender) {
-        return employeeService.getEmployeeByGender(gender);
+        return employeeService.getEmployeesByGender(gender);
     }
 }
