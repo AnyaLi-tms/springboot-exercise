@@ -2,7 +2,8 @@ package com.oocl.training.service;
 
 import com.oocl.training.exception.InvalidCompanyException;
 import com.oocl.training.model.Company;
-import com.oocl.training.repository.CompanyInMemoryRepository;
+import com.oocl.training.repository.CompanyDBRepository;
+import com.oocl.training.repository.CompanyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,18 +11,18 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    private final CompanyInMemoryRepository companyInMemoryRepository;
+    private final CompanyRepository companyRepository;
 
-    public CompanyService(CompanyInMemoryRepository companyInMemoryRepository) {
-        this.companyInMemoryRepository = companyInMemoryRepository;
+    public CompanyService(CompanyDBRepository companyDBRepository) {
+        this.companyRepository = companyDBRepository;
     }
 
     public Company createCompany(Company company) {
-        return companyInMemoryRepository.save(company);
+        return companyRepository.save(company);
     }
 
     public List<Company> getAllCompanies(Integer page, Integer size) {
-        List<Company> allCompanies = new ArrayList<>(companyInMemoryRepository.get());
+        List<Company> allCompanies = new ArrayList<>(companyRepository.get());
 
         if (page == null || size == null || page < 1 || size < 1) {
             return allCompanies;
@@ -37,19 +38,19 @@ public class CompanyService {
     }
 
     public void deleteCompany(Integer id) {
-        companyInMemoryRepository.delete(id);
+        companyRepository.delete(id);
     }
 
     public void updateCompany(Integer id, Company company) {
-        Company existingCompany = companyInMemoryRepository.get(id);
+        Company existingCompany = companyRepository.get(id);
         if (existingCompany == null) {
             throw new InvalidCompanyException("Company with id " + id + " does not exist");
         }
-        companyInMemoryRepository.update(id, company);
+        companyRepository.update(id, company);
     }
 
     public Company getCompany(Integer id) {
-        return companyInMemoryRepository.get(id);
+        return companyRepository.get(id);
     }
 
 //    public List<Employee> getEmployeesByCompanyId(Integer id) {

@@ -3,6 +3,7 @@ package com.oocl.training.integration;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
 import com.oocl.training.repository.EmployeeDBRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,19 +256,19 @@ public class EmployeeTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee with id " + givenId + " does not exist"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
     }
-//    @Test
-//    public void should_return_employees_when_get_employees_by_gender() throws Exception {
-//        // Given
-//        String gender = Gender.MALE.name();
-//
-//        // When
-//        ResultActions perform = client.perform(MockMvcRequestBuilders.get("/employees/{gender}", gender)
-//                .contentType(MediaType.APPLICATION_JSON));
-//
-//        // Then
-//        perform.andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(Matchers.greaterThan(0)))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(gender));
-//    }
+    @Test
+    public void should_return_employees_when_get_employees_by_gender() throws Exception {
+        // Given
+        String gender = Gender.MALE.name();
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.get("/employees/{gender}", gender)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(Matchers.greaterThan(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(gender));
+    }
 }
