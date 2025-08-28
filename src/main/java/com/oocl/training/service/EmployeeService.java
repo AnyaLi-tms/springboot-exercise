@@ -67,6 +67,7 @@ public class EmployeeService {
         if (!existingEmployee.getActive()) {
             throw new InvalidEmployeeException("Employee is not active");
         }
+        employee.setId(id);
         employeeRepository.update(id, employee);
     }
 
