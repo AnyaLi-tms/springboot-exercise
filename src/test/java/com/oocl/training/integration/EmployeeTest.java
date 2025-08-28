@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 
 import static org.springframework.web.servlet.function.RequestPredicates.contentType;
@@ -64,6 +65,60 @@ public class EmployeeTest {
     }
 
     @Test
+    public void should_throw_exception_when_create_employee_age_less_18() throws Exception {
+        // Given
+        Employee givenEmployee = new Employee("Bob Black", 2, Gender.MALE, 5000.0);
+        String employeeJson = objectMapper.writeValueAsString(givenEmployee);
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee age must be between 18 and 65"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    public void should_throw_exception_when_create_employee_age_greater_65() throws Exception {
+        // Given
+        Employee givenEmployee = new Employee("Bob Black", 82, Gender.MALE, 5000.0);
+        String employeeJson = objectMapper.writeValueAsString(givenEmployee);
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee age must be between 18 and 65"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    public void should_throw_exception_when_create_employee_age_greater_30_and_salary_less_20000() throws Exception {
+        // Given
+        Employee givenEmployee = new Employee("Bob Black", 33, Gender.MALE, 5000.0);
+        String employeeJson = objectMapper.writeValueAsString(givenEmployee);
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employees over 30 ages must have a salary more than 20000"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
+    }
+
+    @Test
     public void should_return_all_employees_when_get_all_employees_exist() throws Exception {
         // Given
         List<Employee> givenEmployees = employeeRepository.get();
@@ -100,6 +155,21 @@ public class EmployeeTest {
     }
 
     @Test
+    public void should_throw_exception_when_delete_employee_not_exist() throws Exception {
+        // Given
+        Integer givenId = 100;
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.delete("/employees/{id}", givenId));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee with id " + givenId + " does not exist"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
+    }
+
+    @Test
     public void should_update_employee_when_update_employee() throws Exception {
         // Given
         Employee exsitingEmployee = new Employee(1, "John Smith", 32, Gender.MALE, 5000.0);
@@ -120,6 +190,48 @@ public class EmployeeTest {
     }
 
     @Test
+    public void should_throw_exception_when_update_employee_not_exist() throws Exception {
+        // Given
+        Employee exsitingEmployee = new Employee(100, "John Smith", 32, Gender.MALE, 5000.0);
+        Integer givenId = exsitingEmployee.getId();
+        Employee givenEmployee = new Employee("John Smith", 32, Gender.FEMALE, 5000.0);
+        String employeeJson = objectMapper.writeValueAsString(givenEmployee);
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.put("/employees/{id}", givenId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee with id " + givenId + " does not exist"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
+    }
+
+    @Test
+    public void should_throw_exception_when_update_employee_not_active() throws Exception {
+        // Given
+        Employee exsitingEmployee = new Employee(1, "John Smith", 32, Gender.MALE, 5000.0);
+        exsitingEmployee.setActive(false);
+        employeeRepository.save(exsitingEmployee);
+        Integer givenId = exsitingEmployee.getId();
+        Employee givenEmployee = new Employee("John Smith", 32, Gender.FEMALE, 5000.0);
+        String employeeJson = objectMapper.writeValueAsString(givenEmployee);
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.put("/employees/{id}", givenId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee is not active"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
+    }
+
+    @Test
     public void should_return_employee_when_get_employee() throws Exception {
         // Given
         Integer givenId = 1;
@@ -130,5 +242,20 @@ public class EmployeeTest {
         // Then
         perform.andExpect(MockMvcResultMatchers.status().isOk());
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(givenId));
+    }
+
+    @Test
+    public void should_throw_exception_when_get_employee_not_exist() throws Exception {
+        // Given
+        Integer givenId = 100;
+
+        // When
+        ResultActions perform = client.perform(MockMvcRequestBuilders.get("/employees/{id}", givenId));
+
+        // Then
+        perform.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee with id " + givenId + " does not exist"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
     }
 }
