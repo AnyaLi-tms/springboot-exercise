@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class EmployeeInMemoryRepository implements EmployeeRepository {
@@ -29,6 +30,13 @@ public class EmployeeInMemoryRepository implements EmployeeRepository {
     @Override
     public List<Employee> get() {
         return new ArrayList<>(employeeDb.values());
+    }
+
+    @Override
+    public List<Employee> getByGender(Gender gender) {
+        return employeeDb.values().stream()
+                .filter(e -> e.getGender() == gender)
+                .collect(Collectors.toList());
     }
 
     @Override

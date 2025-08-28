@@ -77,4 +77,8 @@ public class EmployeeService {
         }
         return employeeInMemoryRepository.get(id);
     }
+
+    public List<Employee> getEmployeeByGender(Gender gender) {
+        return employeeInMemoryRepository.getByGender(gender);
+    }
 }
