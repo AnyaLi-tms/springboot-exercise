@@ -3,6 +3,7 @@ package com.oocl.training.controller;
 import com.oocl.training.model.Company;
 import com.oocl.training.model.Employee;
 import com.oocl.training.service.CompanyService;
+import com.oocl.training.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +13,11 @@ import java.util.List;
 @RequestMapping("/companies")
 public class CompanyController {
     private final CompanyService companyService;
+    private final EmployeeService employeeService;
 
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, EmployeeService employeeService) {
         this.companyService = companyService;
+        this.employeeService = employeeService;
     }
 
     @GetMapping()
@@ -46,8 +49,8 @@ public class CompanyController {
         return companyService.getCompany(id);
     }
 
-//    @GetMapping("/{id}/employees")
-//    public List<Employee> getEmployeesByCompanyId(@PathVariable Integer id) {
-//        return companyService.getEmployeesByCompanyId(id);
-//    }
+    @GetMapping("/{companyId}/employees")
+    public List<Employee> getEmployeesByCompanyId(@PathVariable Integer companyId) {
+        return employeeService.getEmployeesByCompanyId(companyId);
+    }
 }

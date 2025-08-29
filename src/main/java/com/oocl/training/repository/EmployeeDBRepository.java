@@ -59,4 +59,9 @@ public class EmployeeDBRepository implements EmployeeRepository {
     public void deleteAll() {
         repository.deleteAll();
     }
+
+    @Override
+    public List<Employee> getByCompanyId(Integer companyId) {
+        return repository.getEmployeesByCompanyId(companyId);
+    }
 }

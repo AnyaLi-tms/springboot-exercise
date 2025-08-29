@@ -9,6 +9,15 @@ public interface EmployeeRepository {
     Employee save(Employee employee);
 
     List<Employee> get();
+//    /**
+//     * 获取员工列表，支持分页和按性别过滤
+//     *
+//     * @param page 页码，从1开始
+//     * @param size 每页大小
+//     * @param gender 性别过滤条件，null表示不过滤
+//     * @return 员工列表
+//     */
+//    List<Employee> get(Integer page, Integer size, Gender gender);
 
     Employee get(Integer id);
 
@@ -21,4 +30,6 @@ public interface EmployeeRepository {
     Integer getMaxId();
 
     void deleteAll();
+
+    List<Employee> getByCompanyId(Integer companyId);
 }

@@ -1,8 +1,10 @@
 package com.oocl.training.controller;
 
 
+import com.oocl.training.controller.mapper.EmployeeMapper;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
+import com.oocl.training.repository.EmployeeRepository;
 import com.oocl.training.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    EmployeeService employeeService;
+    private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeMapper employeeMapper) {
         this.employeeService = employeeService;
+        this.employeeMapper = employeeMapper;
     }
 
     @PostMapping()

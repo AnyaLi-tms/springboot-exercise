@@ -2,6 +2,8 @@ package com.oocl.training.model;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "employee")
@@ -16,7 +18,12 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private Double salary;
-    private Integer companyId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     private Boolean active = true;
 
     public Employee() {
@@ -37,7 +44,6 @@ public class Employee {
         this.gender = gender;
         this.salary = salary;
     }
-
 
     public Integer getId() {
         return id;
@@ -80,12 +86,20 @@ public class Employee {
         this.salary = salary;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
+//    public Integer getCompanyId() {
+//        return companyId;
+//    }
+//
+//    public void setCompanyId(Integer companyId) {
+//        this.companyId = companyId;
+//    }
+
+    public Company getCompany() {
+        return company;
     }
 
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Boolean getActive() {

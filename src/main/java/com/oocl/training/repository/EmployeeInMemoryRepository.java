@@ -62,4 +62,9 @@ public class EmployeeInMemoryRepository implements EmployeeRepository {
     @Override
     public void deleteAll() {
     }
+
+    @Override
+    public List<Employee> getByCompanyId(Integer companyId) {
+        return null;
+    }
 }

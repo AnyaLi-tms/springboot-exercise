@@ -1,6 +1,7 @@
 package com.oocl.training.service;
 
 import com.oocl.training.exception.InvalidEmployeeException;
+import com.oocl.training.model.Company;
 import com.oocl.training.model.Gender;
 import com.oocl.training.repository.EmployeeDBRepository;
 import com.oocl.training.repository.EmployeeRepository;
@@ -81,5 +82,9 @@ public class EmployeeService {
 
     public List<Employee> getEmployeesByGender(Gender gender) {
         return employeeRepository.getByGender(gender);
+    }
+
+    public List<Employee> getEmployeesByCompanyId(Integer companyId) {
+        return employeeRepository.getByCompanyId(companyId);
     }
 }

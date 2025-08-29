@@ -9,4 +9,5 @@ import java.util.List;
 public interface JpaEmployeeRepository extends JpaRepository<Employee, Integer> {
     List<Employee> getEmployeeByGender(Gender gender);
     void deleteAll();
+    List<Employee> getEmployeesByCompanyId(Integer companyId);
 }
