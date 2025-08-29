@@ -47,9 +47,4 @@ public class EmployeeController {
     public Employee getEmployee(@PathVariable Integer id) {
         return employeeService.getEmployee(id);
     }
-
-    @GetMapping("/{gender}")
-    public List<Employee> getEmployee(@PathVariable Gender gender) {
-        return employeeService.getEmployeesByGender(gender);
-    }
 }

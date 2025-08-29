@@ -19,4 +19,6 @@ public interface EmployeeRepository {
     void update(Integer id, Employee employee);
 
     Integer getMaxId();
+
+    void deleteAll();
 }

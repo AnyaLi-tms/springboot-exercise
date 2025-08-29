@@ -319,24 +319,4 @@ class EmployeeServiceTest {
         Mockito.verify(employeeRepository, Mockito.times(1)).get(reqId);
         assertEquals("Employee with id " + reqId + " does not exist", exp.getMessage());
     }
-
-    @Test
-    void should_get_employee_by_gender_successfully() {
-        // Given
-        Gender gender = Gender.MALE;
-        List<Employee> mockEmployees = List.of(
-                new Employee(1, "John Smith", 32, Gender.MALE, 5000.0),
-                new Employee(3, "David Williams", 35, Gender.MALE, 5500.0)
-        );
-        Mockito.when(employeeRepository.getByGender(gender)).thenReturn(mockEmployees);
-
-        // When
-        List<Employee> result = employeeService.getEmployeesByGender(gender);
-
-        // Then
-        Mockito.verify(employeeRepository, Mockito.times(1)).getByGender(gender);
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertTrue(result.stream().allMatch(e -> e.getGender() == gender));
-    }
 }

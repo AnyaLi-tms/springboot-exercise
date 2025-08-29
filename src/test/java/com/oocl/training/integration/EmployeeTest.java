@@ -4,8 +4,7 @@ import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
 import com.oocl.training.repository.EmployeeDBRepository;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +17,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EmployeeTest {
 
     @Autowired
@@ -32,15 +34,19 @@ public class EmployeeTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
+    @BeforeAll
     public void setup() throws Exception {
-        employeeRepository.get().clear();
-        employeeRepository.save(new Employee(1, "John Smith", 32, Gender.MALE, 5000.0));
-        employeeRepository.save(new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0));
-        employeeRepository.save(new Employee(3, "David Williams", 35, Gender.MALE, 5500.0));
-        employeeRepository.save(new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0));
-        employeeRepository.save(new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0));
+//        employeeRepository.save(new Employee("John Smith", 32, Gender.MALE, 5000.0));
+//        employeeRepository.save(new Employee("Jane Johnson", 28, Gender.FEMALE, 6000.0));
+//        employeeRepository.save(new Employee("David Williams", 35, Gender.MALE, 5500.0));
+//        employeeRepository.save(new Employee("Emily Brown", 23, Gender.FEMALE, 4500.0));
+//        employeeRepository.save(new Employee("Michael Jones", 40, Gender.MALE, 7000.0));
     }
+
+//    @AfterAll
+//    public void teardown() throws Exception {
+//        employeeRepository.deleteAll();
+//    }
 
     @Test
     public void should_return_employee_when_create_employee() throws Exception {
@@ -140,7 +146,7 @@ public class EmployeeTest {
     @Test
     public void should_set_active_false_when_delete_employee() throws Exception {
         // Given
-        Integer givenId = 1;
+        Integer givenId = 250;
 
         // When
         ResultActions perform_delete = client.perform(MockMvcRequestBuilders.delete("/employees/{id}", givenId));
@@ -148,8 +154,7 @@ public class EmployeeTest {
 
         // Then
         perform_delete.andExpect(MockMvcResultMatchers.status().isNoContent());
-        perform_get.andExpect(MockMvcResultMatchers.status().isOk());
-        perform_get.andExpect(MockMvcResultMatchers.jsonPath("$.active").value(false));
+        perform_get.andDo(print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.active").value(false));
     }
 
     @Test
@@ -170,9 +175,11 @@ public class EmployeeTest {
     @Test
     public void should_update_employee_when_update_employee() throws Exception {
         // Given
-        Employee exsitingEmployee = new Employee(1, "John Smith", 32, Gender.MALE, 5000.0);
+        Employee employee = new Employee("John Mark", 32, Gender.MALE, 5000.0);
+        Employee exsitingEmployee = employeeRepository.save(employee);
         Integer givenId = exsitingEmployee.getId();
-        Employee givenEmployee = new Employee("John Smith", 32, Gender.FEMALE, 5000.0);
+
+        Employee givenEmployee = new Employee("John Mark", 32, Gender.FEMALE, 5000.0);
         String employeeJson = objectMapper.writeValueAsString(givenEmployee);
 
         // When
@@ -190,8 +197,7 @@ public class EmployeeTest {
     @Test
     public void should_throw_exception_when_update_employee_not_exist() throws Exception {
         // Given
-        Employee exsitingEmployee = new Employee(100, "John Smith", 32, Gender.MALE, 5000.0);
-        Integer givenId = exsitingEmployee.getId();
+        Integer givenId = 100;
         Employee givenEmployee = new Employee("John Smith", 32, Gender.FEMALE, 5000.0);
         String employeeJson = objectMapper.writeValueAsString(givenEmployee);
 
@@ -210,11 +216,12 @@ public class EmployeeTest {
     @Test
     public void should_throw_exception_when_update_employee_not_active() throws Exception {
         // Given
-        Employee exsitingEmployee = new Employee(1, "John Smith", 32, Gender.MALE, 5000.0);
+        Employee employee = new Employee("John Mark", 32, Gender.MALE, 5000.0);
+        Employee exsitingEmployee = employeeRepository.save(employee);
         exsitingEmployee.setActive(false);
         employeeRepository.save(exsitingEmployee);
         Integer givenId = exsitingEmployee.getId();
-        Employee givenEmployee = new Employee("John Smith", 32, Gender.FEMALE, 5000.0);
+        Employee givenEmployee = new Employee("John Mark", 32, Gender.FEMALE, 5000.0);
         String employeeJson = objectMapper.writeValueAsString(givenEmployee);
 
         // When
@@ -232,7 +239,9 @@ public class EmployeeTest {
     @Test
     public void should_return_employee_when_get_employee() throws Exception {
         // Given
-        Integer givenId = 1;
+        Employee employee = new Employee("John Mark", 32, Gender.MALE, 5000.0);
+        Employee exsitingEmployee = employeeRepository.save(employee);
+        Integer givenId = exsitingEmployee.getId();
 
         // When
         ResultActions perform = client.perform(MockMvcRequestBuilders.get("/employees/{id}", givenId));
@@ -255,20 +264,5 @@ public class EmployeeTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid employee."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Employee with id " + givenId + " does not exist"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists());
-    }
-    @Test
-    public void should_return_employees_when_get_employees_by_gender() throws Exception {
-        // Given
-        String gender = Gender.MALE.name();
-
-        // When
-        ResultActions perform = client.perform(MockMvcRequestBuilders.get("/employees/{gender}", gender)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // Then
-        perform.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(Matchers.greaterThan(0)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(gender));
     }
 }

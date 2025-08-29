@@ -58,4 +58,8 @@ public class EmployeeInMemoryRepository implements EmployeeRepository {
     public Integer getMaxId() {
         return employeeDb.keySet().stream().max(Integer::compareTo).orElse(0);
     }
+
+    @Override
+    public void deleteAll() {
+    }
 }

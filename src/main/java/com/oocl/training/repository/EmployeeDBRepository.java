@@ -54,4 +54,9 @@ public class EmployeeDBRepository implements EmployeeRepository {
                 .max(Integer::compareTo)
                 .orElse(0);
     }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }
