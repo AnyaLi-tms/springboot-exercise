@@ -1,17 +1,15 @@
 package com.oocl.training.controller.dto;
 
-
+import com.oocl.training.model.Company;
 import com.oocl.training.model.Gender;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
 public class EmployeeResponse {
     private Integer id;
     private String name;
     private Integer age;
-    @Enumerated(EnumType.STRING)
     private Gender gender;
     private boolean active;
+    private Company company;
 
     public EmployeeResponse() {
     }
@@ -54,5 +52,13 @@ public class EmployeeResponse {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }

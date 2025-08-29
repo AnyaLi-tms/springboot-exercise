@@ -5,7 +5,6 @@ import com.oocl.training.controller.dto.EmployeeResponse;
 import com.oocl.training.controller.mapper.EmployeeMapper;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
-import com.oocl.training.repository.EmployeeRepository;
 import com.oocl.training.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
