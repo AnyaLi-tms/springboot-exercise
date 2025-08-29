@@ -1,6 +1,7 @@
 package com.oocl.training.controller;
 
 
+import com.oocl.training.controller.dto.EmployeeResponse;
 import com.oocl.training.controller.mapper.EmployeeMapper;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
@@ -24,16 +25,16 @@ public class EmployeeController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
+    public EmployeeResponse createEmployee(@RequestBody Employee employee) {
+        return employeeMapper.toResponse(employeeService.createEmployee(employee));
     }
 
     @GetMapping()
-    public List<Employee> getAllEmployees(
+    public List<EmployeeResponse> getAllEmployees(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "5") Integer size,
             @RequestParam(required = false) Gender gender) {
-        return employeeService.getAllEmployees(page, size, gender);
+        return employeeMapper.toResponse(employeeService.getAllEmployees(page, size, gender));
     }
 
     @DeleteMapping("/{id}")
@@ -48,7 +49,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee getEmployee(@PathVariable Integer id) {
-        return employeeService.getEmployee(id);
+    public EmployeeResponse getEmployee(@PathVariable Integer id) {
+        return employeeMapper.toResponse(employeeService.getEmployee(id));
     }
 }

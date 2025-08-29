@@ -31,25 +31,7 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllEmployees(Integer page, Integer size, Gender gender) {
-        List<Employee> allEmployees = new ArrayList<>(employeeRepository.get());
-
-        if (gender != null) {
-            allEmployees = allEmployees.stream()
-                    .filter(e -> e.getGender() == gender)
-                    .collect(Collectors.toList());
-        }
-
-        if (page == null || size == null || page < 1 || size < 1) {
-            return allEmployees;
-        }
-
-        int fromIndex = (page - 1) * size;
-        int toIndex = Math.min(fromIndex + size, allEmployees.size());
-
-        if (fromIndex >= allEmployees.size()) {
-            return new ArrayList<>();
-        }
-        return allEmployees.subList(fromIndex, toIndex);
+        return employeeRepository.get(page, size, gender);
     }
 
     public void deleteEmployee(Integer id) {

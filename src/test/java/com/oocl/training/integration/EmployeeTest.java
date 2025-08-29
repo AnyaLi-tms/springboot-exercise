@@ -65,7 +65,7 @@ public class EmployeeTest {
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.name").value(givenEmployee.getName()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.age").value(givenEmployee.getAge()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.gender").value(givenEmployee.getGender().name()));
-        perform.andExpect(MockMvcResultMatchers.jsonPath("$.salary").value(givenEmployee.getSalary()));
+//        perform.andExpect(MockMvcResultMatchers.jsonPath("$.salary").value(givenEmployee.getSalary()));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class EmployeeTest {
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value(givenEmployees.getFirst().getName()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.[0].age").value(givenEmployees.getFirst().getAge()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.[0].gender").value(givenEmployees.getFirst().getGender().name()));
-        perform.andExpect(MockMvcResultMatchers.jsonPath("$.[0].salary").value(givenEmployees.getFirst().getSalary()));
+//        perform.andExpect(MockMvcResultMatchers.jsonPath("$.[0].salary").value(givenEmployees.getFirst().getSalary()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.[1].id").value(givenEmployees.get(1).getId()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.[2].id").value(givenEmployees.get(2).getId()));
         perform.andExpect(MockMvcResultMatchers.jsonPath("$.[3].id").value(givenEmployees.get(3).getId()));

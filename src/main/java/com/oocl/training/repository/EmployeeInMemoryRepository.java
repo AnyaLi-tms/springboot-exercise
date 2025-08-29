@@ -2,6 +2,9 @@ package com.oocl.training.repository;
 
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -30,6 +33,11 @@ public class EmployeeInMemoryRepository implements EmployeeRepository {
     @Override
     public List<Employee> get() {
         return new ArrayList<>(employeeDb.values());
+    }
+
+    @Override
+    public List<Employee> get(Integer page, Integer size, Gender gender) {
+        return null;
     }
 
     @Override
