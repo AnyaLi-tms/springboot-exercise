@@ -3,23 +3,14 @@ package com.oocl.training.controller.dto;
 import com.oocl.training.model.Company;
 import com.oocl.training.model.Gender;
 
-public class EmployeeResponse {
-    private Integer id;
+public class EmployeeRequest {
     private String name;
     private Integer age;
     private Gender gender;
-    private Boolean active;
-    private Company company;
+    private Double salary;
+    private Integer companyId;
 
-    public EmployeeResponse() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public EmployeeRequest() {
     }
 
     public String getName() {
@@ -46,19 +37,19 @@ public class EmployeeResponse {
         this.gender = gender;
     }
 
-    public boolean isActive() {
-        return active;
+    public Double getSalary() {
+        return salary;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setSalary(Double salary) {
+        this.salary = salary;
     }
 
-    public Company getCompany() {
-        return company;
+    public Integer getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 }

@@ -1,6 +1,7 @@
 package com.oocl.training.controller;
 
 
+import com.oocl.training.controller.dto.EmployeeRequest;
 import com.oocl.training.controller.dto.EmployeeResponse;
 import com.oocl.training.controller.mapper.EmployeeMapper;
 import com.oocl.training.model.Employee;
@@ -24,7 +25,8 @@ public class EmployeeController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeResponse createEmployee(@RequestBody Employee employee) {
+    public EmployeeResponse createEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        Employee employee = employeeMapper.toEntity(employeeRequest);
         return employeeMapper.toResponse(employeeService.createEmployee(employee));
     }
 
@@ -43,7 +45,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public void updateEmployee(@PathVariable Integer id, @RequestBody Employee employee) {
+    public void updateEmployee(@PathVariable Integer id, @RequestBody EmployeeRequest employeeRequest) {
+        Employee employee = employeeMapper.toEntity(employeeRequest);
         employeeService.updateEmployee(id, employee);
     }
 
