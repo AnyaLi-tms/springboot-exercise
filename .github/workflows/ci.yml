@@ -9,10 +9,10 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: pra_db
-          MYSQL_USER: root
-          MYSQL_PASSWORD: secret
+          MYSQL_USER: myuser
+          MYSQL_PASSWORD: mypassword
         ports:
           - 3306:3306
         options: >-
