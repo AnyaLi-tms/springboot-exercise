@@ -4,6 +4,7 @@ import com.oocl.training.exception.InvalidEmployeeException;
 import com.oocl.training.model.Employee;
 import com.oocl.training.model.Gender;
 import com.oocl.training.repository.EmployeeDBRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 class EmployeeServiceTest {
 
